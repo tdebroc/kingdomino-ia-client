@@ -3,23 +3,22 @@ package grooptown.ia;
 import grooptown.ia.model.Game;
 import grooptown.ia.model.GameState;
 import grooptown.ia.model.Player;
+import lombok.Data;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 
-import static grooptown.ia.SSLUtil.disableSSLValidation;
-
 /**
  * Created by thibautdebroca on 09/01/2019.
  */
+@Data
 public class PlayerConnector {
 
     private String gameId;
 
-    private Player player;
+    public Player player;
 
     public static String baseUrl = "https://domi-nation.grooptown.com";
 
@@ -57,7 +56,6 @@ public class PlayerConnector {
                 baseUrl + "/games/" + gameId,
                 String.class
         ).getBody();
-        System.out.println(gameState);
         return gameState;
     }
 
@@ -66,7 +64,26 @@ public class PlayerConnector {
                 baseUrl + "/games/" + gameId,
                 GameState.class
         ).getBody();
-        System.out.println(gameState);
+        return gameState;
+    }
+
+    public GameState playMove(int moveNumber) {
+        System.out.println("Playing Move " + moveNumber + " for player " + player.getUuid());
+        GameState gameState = restTemplate.postForEntity(
+                baseUrl + "/games/" + gameId + "/players/" + player.getUuid() + "/moves/" + moveNumber,
+                null,
+                GameState.class
+        ).getBody();
+        return gameState;
+    }
+
+    public String playMoveAsString(int moveNumber) {
+        System.out.println("Playing Move " + moveNumber + " for player " + player.getUuid());
+        String gameState = restTemplate.postForEntity(
+                baseUrl + "/games/" + gameId + "/players/" + player.getUuid() + "/moves/" + moveNumber,
+                null,
+                String.class
+        ).getBody();
         return gameState;
     }
 

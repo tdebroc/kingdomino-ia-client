@@ -7,14 +7,14 @@ import lombok.Data;
  */
 @Data
 public class GameState {
-    String uuid;
-    String created;
-    String updated;
-    Kingdom[] kingdoms;
-    Domino[] usedDominoes;
-    CurrentDraft currentDraft;
-    CurrentDraft previousDraft;
-    Player currentPlayer;
-    boolean gameOver;
-    int turn;
+    private String uuid;
+    private String created;
+    private String updated;
+    private Kingdom[] kingdoms;
+    private Domino[] usedDominoes;
+    private CurrentDraft currentDraft;
+    private CurrentDraft previousDraft;
+    private Player currentPlayer;
+    private boolean gameOver;
+    private int turn;
 }
