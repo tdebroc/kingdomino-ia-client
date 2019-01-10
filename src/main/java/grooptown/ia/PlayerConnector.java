@@ -1,5 +1,6 @@
 package grooptown.ia;
 
+import grooptown.ia.model.AvailableMoves;
 import grooptown.ia.model.Game;
 import grooptown.ia.model.GameState;
 import grooptown.ia.model.Player;
@@ -28,6 +29,10 @@ public class PlayerConnector {
         this.gameId = gameId;
     }
 
+    /**
+     * Constructor for RestTemplate.
+     * @return
+     */
     private static RestTemplate getRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
@@ -36,14 +41,22 @@ public class PlayerConnector {
         return restTemplate;
     }
 
+    /**
+     * Creates a Game on the server.
+     * @param playerCount
+     * @return
+     */
     public static Game createNewGame(int playerCount) {
-        Game result = restTemplate.postForObject(
+        return restTemplate.postForObject(
                 baseUrl + "/new-games/?playerCount=" + playerCount,
                 null, Game.class
         );
-        return result;
     }
 
+    /**
+     * Make one player joining the game. PlayerConnector will store the secret uuid of the player.
+     * @param playerName
+     */
     public void joinGame(String playerName) {
         player = restTemplate.postForObject(
                 baseUrl + "/new-games/" + gameId + "/join/" + playerName,
@@ -51,22 +64,37 @@ public class PlayerConnector {
         );
     }
 
+    /**
+     * Gets game state as a String.
+     * @param gameId
+     * @return
+     */
     public static String getGameStateAsString(String gameId) {
-        String gameState = restTemplate.getForEntity(
+        return restTemplate.getForEntity(
                 baseUrl + "/games/" + gameId,
                 String.class
         ).getBody();
-        return gameState;
     }
 
+
+    /**
+     * Gets Game State as a Java Object GameState.
+     * @param gameId
+     * @return
+     */
     public static GameState getGameState(String gameId) {
-        GameState gameState = restTemplate.getForEntity(
+        return restTemplate.getForEntity(
                 baseUrl + "/games/" + gameId,
                 GameState.class
         ).getBody();
-        return gameState;
     }
 
+
+    /**
+     * The players will play move number "moveNumber".
+     * @param moveNumber
+     * @return
+     */
     public GameState playMove(int moveNumber) {
         System.out.println("Playing Move " + moveNumber + " for player " + player.getUuid());
         GameState gameState = restTemplate.postForEntity(
@@ -77,19 +105,15 @@ public class PlayerConnector {
         return gameState;
     }
 
-    public String playMoveAsString(int moveNumber) {
-        System.out.println("Playing Move " + moveNumber + " for player " + player.getUuid());
-        String gameState = restTemplate.postForEntity(
-                baseUrl + "/games/" + gameId + "/players/" + player.getUuid() + "/moves/" + moveNumber,
-                null,
-                String.class
+    /**
+     * Gets Available Moves in the current turn.
+     * @return
+     */
+    public AvailableMoves getAvailableMove() {
+        return restTemplate.getForEntity(
+                baseUrl + "/games/" + gameId + "/available-moves",
+                AvailableMoves.class
         ).getBody();
-        return gameState;
-    }
-
-
-    public static void getAvailableMove(String gameId) {
-        // TODO: To implements;
     }
 
 }

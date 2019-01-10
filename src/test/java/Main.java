@@ -1,5 +1,5 @@
-package grooptown.ia;
-
+import grooptown.ia.PlayerConnector;
+import grooptown.ia.model.AvailableMoves;
 import grooptown.ia.model.Game;
 import grooptown.ia.model.GameState;
 
@@ -10,8 +10,14 @@ import static grooptown.ia.SSLUtil.disableSSLValidation;
  */
 public class Main {
 
+    /**
+     * Example on how to use the playerConnector.
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
-        disableSSLValidation();
+        // With JDK inferior to 8u101 you need to disable SSL validation.
+        // disableSSLValidation();
         PlayerConnector.baseUrl = "https://domi-nation.grooptown.com";
         int playerCount = 3;
         int maxTurnToPlay = 20;
@@ -34,11 +40,20 @@ public class Main {
         for (int i = 0; i < maxTurnToPlay; i++) {
             PlayerConnector playerConnector = getCurrentPlayerConnector(playerConnectors, gameState);
             playerConnector.playMove(0);
+            AvailableMoves availableMove = playerConnector.getAvailableMove();
+            System.out.println("Availables Moves are: " + availableMove);
             gameState = PlayerConnector.getGameState(newGame.getUuid());
-            System.out.println(gameState);
+            System.out.println("Game State is " + gameState);
         }
     }
 
+
+    /**
+     * Gets the Player that should play the current Turn. If not found, return null.
+     * @param playerConnectors
+     * @param gameState
+     * @return
+     */
     private static PlayerConnector getCurrentPlayerConnector(PlayerConnector[] playerConnectors,
                                                              GameState gameState) {
         for (PlayerConnector playerConnector : playerConnectors) {
