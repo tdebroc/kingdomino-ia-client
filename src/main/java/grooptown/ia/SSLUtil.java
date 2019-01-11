@@ -1,13 +1,12 @@
 package grooptown.ia;
 
 import javax.net.ssl.*;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 /**
- * Created by thibautdebroca on 09/01/2019.
+ * Utility to disabled SSL Validation (in case the SDK doesn't have a SDK > Java 8_101.
+ * Created by Thibaut de Broca on 09/01/2019.
  */
 public class SSLUtil {
 

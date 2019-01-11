@@ -11,9 +11,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 
-/**
- * Created by thibautdebroca on 09/01/2019.
- */
 @Data
 public class PlayerConnector {
 
@@ -31,7 +28,7 @@ public class PlayerConnector {
 
     /**
      * Constructor for RestTemplate.
-     * @return
+     * @return An instance of a RestTemplate.
      */
     private static RestTemplate getRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
@@ -43,8 +40,8 @@ public class PlayerConnector {
 
     /**
      * Creates a Game on the server.
-     * @param playerCount
-     * @return
+     * @param playerCount Counts number of players.
+     * @return The Game created with its uuid.
      */
     public static Game createNewGame(int playerCount) {
         return restTemplate.postForObject(
@@ -55,7 +52,7 @@ public class PlayerConnector {
 
     /**
      * Make one player joining the game. PlayerConnector will store the secret uuid of the player.
-     * @param playerName
+     * @param playerName The player name who want to join the game.
      */
     public void joinGame(String playerName) {
         player = restTemplate.postForObject(
@@ -66,8 +63,8 @@ public class PlayerConnector {
 
     /**
      * Gets game state as a String.
-     * @param gameId
-     * @return
+     * @param gameId Id Of the game.
+     * @return Game represented as a String.
      */
     public static String getGameStateAsString(String gameId) {
         return restTemplate.getForEntity(
@@ -79,8 +76,8 @@ public class PlayerConnector {
 
     /**
      * Gets Game State as a Java Object GameState.
-     * @param gameId
-     * @return
+     * @param gameId ID Of the game we want to get.
+     * @return State of the game.
      */
     public static GameState getGameState(String gameId) {
         return restTemplate.getForEntity(
@@ -92,22 +89,21 @@ public class PlayerConnector {
 
     /**
      * The players will play move number "moveNumber".
-     * @param moveNumber
-     * @return
+     * @param moveNumber Number of the Move.
+     * @return State of the Game.
      */
     public GameState playMove(int moveNumber) {
         System.out.println("Playing Move " + moveNumber + " for player " + player.getUuid());
-        GameState gameState = restTemplate.postForEntity(
+        return restTemplate.postForEntity(
                 baseUrl + "/games/" + gameId + "/players/" + player.getUuid() + "/moves/" + moveNumber,
                 null,
                 GameState.class
         ).getBody();
-        return gameState;
     }
 
     /**
      * Gets Available Moves in the current turn.
-     * @return
+     * @return Moves that the current player can play.
      */
     public AvailableMoves getAvailableMove() {
         return restTemplate.getForEntity(

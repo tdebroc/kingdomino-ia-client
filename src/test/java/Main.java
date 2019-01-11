@@ -3,18 +3,12 @@ import grooptown.ia.model.AvailableMoves;
 import grooptown.ia.model.Game;
 import grooptown.ia.model.GameState;
 
-import static grooptown.ia.SSLUtil.disableSSLValidation;
-
 /**
+ * Launches a Random game.
  * Created by thibautdebroca on 09/01/2019.
  */
 public class Main {
 
-    /**
-     * Example on how to use the playerConnector.
-     * @param args
-     * @throws Exception
-     */
     public static void main(String[] args) throws Exception {
         // With JDK inferior to 8u101 you need to disable SSL validation.
         // disableSSLValidation();
@@ -41,7 +35,7 @@ public class Main {
             PlayerConnector playerConnector = getCurrentPlayerConnector(playerConnectors, gameState);
             playerConnector.playMove(0);
             AvailableMoves availableMove = playerConnector.getAvailableMove();
-            System.out.println("Availables Moves are: " + availableMove);
+            System.out.println("Available Moves are: " + availableMove);
             gameState = PlayerConnector.getGameState(newGame.getUuid());
             System.out.println("Game State is " + gameState);
         }
@@ -50,18 +44,18 @@ public class Main {
 
     /**
      * Gets the Player that should play the current Turn. If not found, return null.
-     * @param playerConnectors
-     * @param gameState
-     * @return
+     * @param playerConnectors All player Connectors.
+     * @param gameState State of the Game.
+     * @return The Player that should play the current Turn. If not found, return null.
      */
     private static PlayerConnector getCurrentPlayerConnector(PlayerConnector[] playerConnectors,
-                                                             GameState gameState) {
+                                                             GameState gameState) throws Exception {
         for (PlayerConnector playerConnector : playerConnectors) {
             if (gameState.getCurrentPlayer().getName().equals(playerConnector.getPlayer().getName())) {
                 return playerConnector;
             }
         }
-        return null;
+        throw new Exception("There is no player who should play.");
     }
 
 }
