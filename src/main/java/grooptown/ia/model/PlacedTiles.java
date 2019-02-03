@@ -3,7 +3,7 @@ package grooptown.ia.model;
 import lombok.Data;
 
 @Data
-class PlacedTiles {
+public class PlacedTiles {
     private Position position;
     private Tile tile;
 }

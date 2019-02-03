@@ -3,6 +3,6 @@ package grooptown.ia.model;
 import lombok.Data;
 
 @Data
-class CurrentDraft {
+public class CurrentDraft {
     private DominoesElement[] dominoes;
 }
